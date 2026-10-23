@@ -26,9 +26,14 @@ pub(crate) use super::unix_common::{
 #[cfg(test)]
 mod config_file_tests;
 
+// logind is absent on Android; platform/mod.rs supplies the no-op monitors there.
+#[cfg(target_os = "linux")]
 mod shutdown;
+#[cfg(target_os = "linux")]
 pub(crate) use shutdown::monitor_host_shutdown;
+#[cfg(target_os = "linux")]
 mod power;
+#[cfg(target_os = "linux")]
 pub(crate) use power::monitor_host_power;
 
 const WSL_MARKER_ENV_VARS: &[&str] = &["WSL_DISTRO_NAME", "WSL_INTEROP"];
@@ -299,7 +304,7 @@ fn process_detection_mode() -> ProcessDetectionMode {
 }
 
 fn raw_command_argv(command: &str, flag: &str) -> Vec<std::ffi::OsString> {
-    vec!["/bin/sh".into(), flag.into(), command.into()]
+    vec![super::posix_shell().into(), flag.into(), command.into()]
 }
 
 pub(crate) fn detached_custom_command_process_platform(command: &str) -> std::process::Command {
@@ -320,7 +325,7 @@ pub(crate) fn scrollback_editor_argv(path: &std::path::Path) -> std::io::Result<
     let command = format!(
         r#"scrollback_file={quoted_path}; eval "${{EDITOR:-vi}} \"\$scrollback_file\""; status=$?; rm -f "$scrollback_file"; exit $status"#
     );
-    Ok(vec!["/bin/sh".to_string(), "-c".to_string(), command])
+    Ok(vec![super::posix_shell(), "-c".to_string(), command])
 }
 
 pub(crate) fn interactive_shell_command(argv: &[String], shell_name: &str) -> Option<String> {

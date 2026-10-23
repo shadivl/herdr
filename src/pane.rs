@@ -1980,7 +1980,7 @@ fn windows_executable_machine_is_compatible(machine: u16, native_machine: u16) -
 
 #[cfg(not(windows))]
 fn default_pane_shell() -> String {
-    "/bin/sh".into()
+    crate::platform::posix_shell()
 }
 
 #[derive(Clone, Copy)]

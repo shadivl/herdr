@@ -9,6 +9,9 @@ fn zig_target(target: &str) -> &str {
         "aarch64-unknown-linux-gnu" => "aarch64-linux-gnu",
         "x86_64-unknown-linux-musl" => "x86_64-linux-musl",
         "aarch64-unknown-linux-musl" => "aarch64-linux-musl",
+        // API 24 matches Termux's minimum supported Android release.
+        "aarch64-linux-android" => "aarch64-linux-android.24",
+        "x86_64-linux-android" => "x86_64-linux-android.24",
         "x86_64-apple-darwin" => "x86_64-macos",
         "aarch64-apple-darwin" => "aarch64-macos",
         "aarch64-apple-ios" => "aarch64-ios",
